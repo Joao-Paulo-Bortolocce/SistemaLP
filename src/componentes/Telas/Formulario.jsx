@@ -1,7 +1,7 @@
 import CadastroCliente from "./CadastrosCliente";
 import CadastroFornecedor from "./CadastrosFornecedor";
 import CadastroProduto from "./CadastrosProduto";
-import CadastroCategoria from "./CadastrosCategoria";
+import CadastroCategoria from "./formularios/CadastrosCategoria";
 
 export default function Formulario(props) {
     let flag = props.flag;
