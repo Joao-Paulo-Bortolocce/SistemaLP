@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import { FormLabel } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Row from 'react-bootstrap/Row';
 
-export default function CadastroProduto() {
+export default function CadastroProduto(props) {
   const [validated, setValidated] = useState(false);
 
   const handleSubmit = (event) => {
@@ -24,7 +23,7 @@ export default function CadastroProduto() {
       <Row className="mb-4">
         <Form.Group as={Col} md="4" controlId="validationCustom05">
           <Form.Label>Código</Form.Label>
-          <Form.Control type="number"  required />
+          <Form.Control type="number" required />
           <Form.Control.Feedback type="invalid">
             Por-Favor informe o código do produto
           </Form.Control.Feedback>
@@ -73,7 +72,7 @@ export default function CadastroProduto() {
       <Row className="mb-3">
         <Form.Group as={Col} md="3" controlId="validationCustom04">
           <Form.Label>Data de validade</Form.Label>
-          <Form.Control type="date"  required />
+          <Form.Control type="date" required />
           <Form.Control.Feedback type="invalid">
             Por-favor informe a data de validade
           </Form.Control.Feedback>
@@ -87,7 +86,18 @@ export default function CadastroProduto() {
           feedbackType="invalid"
         />
       </Form.Group>
-      <Button type="submit">Cadastrar</Button>
+      <Row className='mt-2 mb-2'>
+        <Col md={1}>
+          <Button type="submit">Cadastrar</Button>
+
+        </Col>
+        <Col md={{offset:1}} >
+          <Button onClick={()=>{
+            props.setExibirTabela(true);
+          }}>Voltar</Button>
+
+        </Col>
+      </Row>
     </Form>
   );
 }
