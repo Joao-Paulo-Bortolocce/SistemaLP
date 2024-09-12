@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Row from 'react-bootstrap/Row';
 
-export default function CadastrosFornecedor() {
+export default function CadastrosFornecedor(props) {
   const [validated, setValidated] = useState(false);
 
   const handleSubmit = (event) => {
@@ -22,11 +22,11 @@ export default function CadastrosFornecedor() {
     <Form noValidate validated={validated} onSubmit={handleSubmit} className='container w-75'>
       <Row className="mb-3">
         <Form.Group as={Col} md="4" controlId="validationCustom01">
-          <Form.Label>codigo</Form.Label>
+          <Form.Label>CNPJ</Form.Label>
           <Form.Control
             required
-            type="number"
-            placeholder="Codigo"
+            type="text"
+            placeholder="cnpj"
           />
           <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
         </Form.Group>
@@ -57,8 +57,38 @@ export default function CadastrosFornecedor() {
       </Row>
       <Row className="mb-3">
         <Form.Group as={Col} md="6" controlId="validationCustom03">
-          <Form.Label>senha</Form.Label>
-          <Form.Control type="text" placeholder="senha" required />
+          <Form.Label>Estado</Form.Label>
+          <Form.Select aria-label="Default select example">
+            <option value="">Estado</option>
+            <option value="ac">Acre</option>
+            <option value="al">Alagoas</option>
+            <option value="ap">Amapá</option>
+            <option value="am">Amazonas</option>
+            <option value="ba">Bahia</option>
+            <option value="ce">Ceará</option>
+            <option value="df">Distrito Federal</option>
+            <option value="es">Espírito Santo</option>
+            <option value="go">Goiás</option>
+            <option value="ma">Maranhão</option>
+            <option value="mt">Mato Grosso</option>
+            <option value="ms">Mato Grosso do Sul</option>
+            <option value="mg">Minas Gerais</option>
+            <option value="pa">Pará</option>
+            <option value="pb">Paraíba</option>
+            <option value="pr">Paraná</option>
+            <option value="pe">Pernambuco</option>
+            <option value="pi">Piauí</option>
+            <option value="rj">Rio de Janeiro</option>
+            <option value="rn">Rio Grande do Norte</option>
+            <option value="rs">Rio Grande do Sul</option>
+            <option value="ro">Rondônia</option>
+            <option value="rr">Roraima</option>
+            <option value="sc">Santa Catarina</option>
+            <option value="sp">São Paulo</option>
+            <option value="se">Sergipe</option>
+            <option value="to">Tocantins</option>
+
+          </Form.Select>
           <Form.Control.Feedback type="invalid">
             Por-favor informe sua senha
           </Form.Control.Feedback>
@@ -78,10 +108,17 @@ export default function CadastrosFornecedor() {
           </Form.Control.Feedback>
         </Form.Group>
         <Form.Group as={Col} md="3" controlId="validationCustom05">
-          <Form.Label>CNPJ</Form.Label>
-          <Form.Control type='password' required />
+          <Form.Label>cep</Form.Label>
+          <Form.Control type='text' placeholder='11111-111' required />
           <Form.Control.Feedback type="invalid">
-            Por Favor informe seu CNPJ
+            Por Favor informe seu cep
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group as={Col} md="3" controlId="validationCustom05">
+          <Form.Label>numero</Form.Label>
+          <Form.Control type='number' required />
+          <Form.Control.Feedback type="invalid">
+            Por Favor informe seu numero
           </Form.Control.Feedback>
         </Form.Group>
       </Row>
@@ -93,7 +130,13 @@ export default function CadastrosFornecedor() {
           feedbackType="invalid"
         />
       </Form.Group>
-      <Button type="submit">Cadastrar</Button>
+      <Row>
+
+        <Col md={1}><Button type="submit">Cadastrar</Button></Col>
+        <Col md={{ offset: 1 }}>
+          <Button onClick={() => { props.setExibirTabela(true) }}>Voltar</Button>
+        </Col>
+      </Row>
     </Form>
   );
 }

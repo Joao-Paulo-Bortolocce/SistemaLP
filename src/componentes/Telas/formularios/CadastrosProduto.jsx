@@ -54,7 +54,7 @@ export default function CadastroProduto(props) {
         </Form.Group>
       </Row>
       <Row className="mb-3">
-        <Form.Group as={Col} md="3" controlId="validationCustom03">-
+        <Form.Group as={Col} md="3" controlId="validationCustom03">
           <Form.Label>Preço de custo</Form.Label>
           <Form.Control min="0" type="number" placeholder="Preço de custo" required />
           <Form.Control.Feedback type="invalid">
@@ -75,6 +75,13 @@ export default function CadastroProduto(props) {
           <Form.Control type="date" required />
           <Form.Control.Feedback type="invalid">
             Por-favor informe a data de validade
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group as={Col} md="6" controlId="validationCustom04">
+          <Form.Label>Url da imagem</Form.Label>
+          <Form.Control type="text" required />
+          <Form.Control.Feedback type="invalid">
+            Por-favor informe a url da imagem
           </Form.Control.Feedback>
         </Form.Group>
       </Row>

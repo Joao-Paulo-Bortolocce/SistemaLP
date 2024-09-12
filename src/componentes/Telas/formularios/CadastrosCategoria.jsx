@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Row from 'react-bootstrap/Row';
 
-export default function CadastroCategoria() {
+export default function CadastroCategoria(props) {
   const [validated, setValidated] = useState(false);
 
   const handleSubmit = (event) => {
@@ -46,7 +46,13 @@ export default function CadastroCategoria() {
           feedbackType="invalid"
         />
       </Form.Group>
-      <Button type="submit">Cadastrar</Button>
+      <Row>
+
+        <Col md={1}><Button type="submit">Cadastrar</Button></Col>
+        <Col md={{ offset: 1 }}>
+          <Button onClick={() => { props.setExibirTabela(true) }}>Voltar</Button>
+        </Col>
+      </Row>
     </Form>
   );
 }
