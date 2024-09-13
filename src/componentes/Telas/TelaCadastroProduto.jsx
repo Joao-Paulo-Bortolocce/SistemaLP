@@ -14,7 +14,7 @@ export default function TelaCadastroProdutos(){
                 <Alert className="mt-02 mb-02 success text-center">
                     <h2>Produtos</h2>
                 </Alert>
-                    {exibirTabela ? <TabelaProdutos setExibirTabela={setExibirTabela} listaDeProdutos={produtos}/> : <CadastroProduto setExibirTabela={setExibirTabela}/>}
+                    {exibirTabela ? <TabelaProdutos setExibirTabela={setExibirTabela} listaDeProdutos={produtos}/> : <CadastroProduto listaDeProdutos={produtos} setExibirTabela={setExibirTabela}/>}
             </Pagina>
         </Container>
     );

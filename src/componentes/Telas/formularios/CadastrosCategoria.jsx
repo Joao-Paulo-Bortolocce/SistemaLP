@@ -19,7 +19,7 @@ export default function CadastroCategoria(props) {
   };
 
   return (
-    <Form noValidate validated={validated} onSubmit={handleSubmit} className='container w-75'>
+    <Form noValidate validated={validated} onSubmit={handleSubmit} className='container'>
       <Row className="mb-6">
         <Form.Group as={Col} md="3" controlId="validationCustom05">
           <Form.Label>Código</Form.Label>

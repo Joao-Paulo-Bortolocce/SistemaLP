@@ -19,7 +19,7 @@ export default function CadastrosFornecedor(props) {
   };
 
   return (
-    <Form noValidate validated={validated} onSubmit={handleSubmit} className='container w-75'>
+    <Form noValidate validated={validated} onSubmit={handleSubmit} className='container'>
       <Row className="mb-3">
         <Form.Group as={Col} md="4" controlId="validationCustom01">
           <Form.Label>CNPJ</Form.Label>
