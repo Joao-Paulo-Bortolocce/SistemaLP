@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -7,37 +7,72 @@ import Row from 'react-bootstrap/Row';
 
 export default function CadastroProduto(props) {
   //const [validated, setValidated] = useState(false);
-  const [formValidado,setFormValidado]= useState(false);
-  const [produto,setProduto] = useState({
-    codigo:0,
-    descricao:"",
-    precoCusto:0,
-    precoVenda:0,
-    qtdEstoque:0,
-    urlImagem:"",
-    dtValidade:"31/12/3000"
-  })
+  const [formValidado, setFormValidado] = useState(false);
 
-  function manipularSubmissao(evento){
-    const form=evento.currentTarget;
-    if(form.checkValidity()){
+
+  function manipularSubmissao(evento) {
+    const form = evento.currentTarget;
+    if (form.checkValidity()) {
       //Cadastrar o produto
-      props.listaDeProdutos.push(produto);
+      if (props.modoEdicao) {
+        const prods = props.listaDeProdutos.map((item) => {
+          if (item.codigo == props.produto.codigo) {
+            // item.descricao=props.produto.descricao;
+            // item.qtdEstoque=props.produto.qtdEstoque;
+            // item.precoCusto= props.produto.precoCusto;
+            // item.precoVenda=props.produto.precoVenda;
+            // item.urlImagem=props.produto.urlImagem;
+            // item.dtValidade= props.produto.dtValidade;
+            return props.produto;
+          }
+          else {
+            
+            console.log("Diferentes")
+            return item;
+          }
+        });
+        props.setListaDeProdutos(prods)
+        props.setModoEdicao(false);
+      }
       //Exibir a tabela com o produto incluido
-      props.setExibirTabela(true);  
+      else {
+
+        props.setListaDeProdutos([...props.listaDeProdutos, props.produto]);
+      }
+      props.setProduto({
+        codigo: 0,
+        descricao: "",
+        precoCusto: 0,
+        precoVenda: 0,
+        qtdEstoque: 0,
+        urlImagem: "",
+        dtValidade: "31/12/3000"
+      })
+      props.setExibirTabela(true);
+
     }
-    else{
+    else {
       setFormValidado(true);
     }
     evento.stopPropagation();
     evento.preventDefault();
   }
 
-  function manipularMudanca(evento){
+  function manipularMudanca(evento) {
     const elemento = evento.target.id;
     const valor = evento.target.value;
-    setProduto({...produto, [elemento]:valor}); //... Faz o espalhamento do objeto
+    props.setProduto({ ...props.produto, [elemento]: valor }); //... Faz o espalhamento do objeto
     console.log(`Componente : ${elemento} : ${valor}`)
+  }
+
+  function manipularModoEdicao() {
+
+    if (props.modoEdicao) {
+      document.getElementById('botao').innerText = "Editar";
+    }
+    else {
+      document.getElementById('botao').innerText = "Cadastrar";
+    }
   }
 
   // const handleSubmit = (event) => {  //METODO QUE JA VEIO COM O FORMULARIO PARA PODER VERIFICAR
@@ -50,6 +85,9 @@ export default function CadastroProduto(props) {
   //   setValidated(true);
   // };
 
+  useEffect(() => {
+    manipularModoEdicao();
+  });
 
   return (
     <Form noValidate validated={formValidado} onSubmit={manipularSubmissao} className='container'>
@@ -57,8 +95,8 @@ export default function CadastroProduto(props) {
         <Form.Group as={Col} md="4" >
           <Form.Label>Código</Form.Label>
           <Form.Control type="number" required id="codigo"
-          value={produto.codigo}
-          onChange={manipularMudanca}
+            value={props.produto.codigo}
+            onChange={manipularMudanca}
           />
           <Form.Control.Feedback type="invalid">
             Por-Favor informe o código do produto
@@ -71,9 +109,9 @@ export default function CadastroProduto(props) {
             type="text"
             placeholder="Descrição"
             id="descricao"
-            value={produto.descricao}
+            value={props.produto.descricao}
             onChange={manipularMudanca}
-            />
+          />
           <Form.Control.Feedback type='invalid'>Informe a Descrição do produto</Form.Control.Feedback>
         </Form.Group>
         <Form.Group as={Col} md="3" >
@@ -86,9 +124,9 @@ export default function CadastroProduto(props) {
               min="0"
               required
               id="qtdEstoque"
-              value={produto.qtdEstoque}
+              value={props.produto.qtdEstoque}
               onChange={manipularMudanca}
-              />
+            />
             <Form.Control.Feedback type="invalid">
               Por-favor informe um valor para o estoque
             </Form.Control.Feedback>
@@ -98,10 +136,10 @@ export default function CadastroProduto(props) {
       <Row className="mb-3">
         <Form.Group as={Col} md="3" >
           <Form.Label>Preço de custo</Form.Label>
-          <Form.Control min="0" type="number" placeholder="Preço de custo" required 
-          id="precoCusto"
-          value={produto.precoCusto}
-          onChange={manipularMudanca}
+          <Form.Control min="0" type="number" placeholder="Preço de custo" required
+            id="precoCusto"
+            value={props.produto.precoCusto}
+            onChange={manipularMudanca}
           />
           <Form.Control.Feedback type="invalid">
             Por-favor informe o Preço de custo
@@ -109,10 +147,10 @@ export default function CadastroProduto(props) {
         </Form.Group>
         <Form.Group as={Col} md="3" >
           <Form.Label>Preço de Venda</Form.Label>
-          <Form.Control min="0" type="number" placeholder="Preço de venda" required 
-          id="precoVenda"
-          value={produto.precoVenda}
-          onChange={manipularMudanca}
+          <Form.Control min="0" type="number" placeholder="Preço de venda" required
+            id="precoVenda"
+            value={props.produto.precoVenda}
+            onChange={manipularMudanca}
           />
           <Form.Control.Feedback type="invalid">
             Por-favor informe o Preço de venda
@@ -122,10 +160,10 @@ export default function CadastroProduto(props) {
       <Row className="mb-3">
         <Form.Group as={Col} md="3" >
           <Form.Label>Data de validade</Form.Label>
-          <Form.Control type="date" required 
-          id="dtValidade"
-          value={produto.dtValidade}
-          onChange={manipularMudanca}
+          <Form.Control type="date" required
+            id="dtValidade"
+            value={props.produto.dtValidade}
+            onChange={manipularMudanca}
           />
           <Form.Control.Feedback type="invalid">
             Por-favor informe a data de validade
@@ -133,10 +171,10 @@ export default function CadastroProduto(props) {
         </Form.Group>
         <Form.Group as={Col} md="6" >
           <Form.Label>Url da imagem</Form.Label>
-          <Form.Control type="text" required 
-          id="urlImagem"
-          value={produto.urlImagem}
-          onChange={manipularMudanca}
+          <Form.Control type="text" required
+            id="urlImagem"
+            value={props.produto.urlImagem}
+            onChange={manipularMudanca}
           />
           <Form.Control.Feedback type="invalid">
             Por-favor informe a url da imagem
@@ -149,15 +187,15 @@ export default function CadastroProduto(props) {
           label="Concordo com os termos de uso"
           feedback="Você tem que concordar antes de finalizar o cadastro"
           feedbackType="invalid"
-          />
+        />
       </Form.Group>
       <Row className='mt-2 mb-2'>
         <Col md={1}>
-          <Button type="submit">Cadastrar</Button>
+          <Button id="botao" type="submit">Cadastrar</Button>
 
         </Col>
-        <Col md={{offset:1}} >
-          <Button onClick={()=>{
+        <Col md={{ offset: 1 }} >
+          <Button onClick={() => {
             props.setExibirTabela(true);
           }}>Voltar</Button>
 
