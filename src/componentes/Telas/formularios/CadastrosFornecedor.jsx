@@ -4,7 +4,6 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Row from 'react-bootstrap/Row';
-import { useEffect } from 'react';
 
 export default function CadastrosFornecedor(props) {
   const [validated, setValidated] = useState(false);
@@ -14,7 +13,7 @@ export default function CadastrosFornecedor(props) {
     if (form.checkValidity()) {
       if (props.modoEdicao) {
         const fornecedores = props.listaDeFornecedores.map((item) => {
-          if (item.cnpj == props.fornecedor.cnpj)
+          if (item.cnpj === props.fornecedor.cnpj)
             return props.fornecedor;
           return item;
         });
@@ -49,19 +48,7 @@ export default function CadastrosFornecedor(props) {
     console.log(`Componente : ${elemento} : ${valor}`)
   }
 
-  function manipularModoEdicao(){
-    if (props.modoEdicao) {
-      document.getElementById('botao').innerText = "Editar";
-    }
-    else {
-      document.getElementById('botao').innerText = "Cadastrar";
-    }
 
-  }
-
-  useEffect(() => {
-    manipularModoEdicao();
-  });
 
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit} className='container'>
@@ -219,7 +206,7 @@ export default function CadastrosFornecedor(props) {
         />
       </Form.Group>
       <Row>
-        <Col md={1}><Button type="submit" id="botao">Cadastrar</Button></Col>
+        <Col md={1}><Button type="submit" id="botao">{props.modoEdicao ? "Alterar" : "Cadastrar"}</Button></Col>
         <Col md={{ offset: 1 }}>
           <Button onClick={() => { props.setExibirTabela(true) }}>Voltar</Button>
         </Col>

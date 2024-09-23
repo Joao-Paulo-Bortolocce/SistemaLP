@@ -1,4 +1,4 @@
-import Pagina from "./componentes/layouts/Pagina";
+
 import Tela404 from "./componentes/Telas/Tela404";
 import TelaCadastroProdutos from "./componentes/Telas/TelaCadastroProduto";
 import TelaCadastroCategorias from "./componentes/Telas/TelaCadastroCategoria";

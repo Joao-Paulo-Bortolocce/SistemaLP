@@ -52,7 +52,9 @@ export default function TabelaProdutos(props) {
                                         <td>{produto.precoCusto}</td>
                                         <td>{produto.precoVenda}</td>
                                         <td>{produto.qtdEstoque}</td>
-                                        <td><img src={produto.urlImagem} alt="Foto do Produto" /*style={
+                                    <td><img src={produto.urlImagem} alt="Foto do Produto" 
+                                    style={{ width: "50px", height: "50px" }}
+                                    /*style={
                                             "width: 40px"
                                             "width: 40px"
                                         }*/></img></td>
@@ -74,6 +76,7 @@ export default function TabelaProdutos(props) {
                         }
                     </tbody>
                 </Table>
+                <p>Quantidade de produtos cadastrados: {props.listaDeProdutos.length}</p>
             </Container >
         </>
     );

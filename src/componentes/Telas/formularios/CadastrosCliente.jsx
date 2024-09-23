@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -45,14 +45,7 @@ export default function CadastroCliente(props) {
     props.setCliente({ ...props.cliente, [id]: valor });
   }
 
-  useEffect(()=>{
-    if (props.modoEdicao) {
-      document.getElementById('botao').innerText = "Editar";
-    }
-    else {
-      document.getElementById('botao').innerText = "Cadastrar";
-    }
-  })
+
 
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit} className='container'>
@@ -204,7 +197,7 @@ export default function CadastroCliente(props) {
       </Form.Group>
 
       <Row>
-        <Col md={1}><Button type="submit" id="botao"></Button></Col>
+        <Col md={1}><Button type="submit" id="botao">{props.modoEdicao ? "Alterar":"Cadastrar"}</Button></Col>
         <Col md={{ offset: 1 }}>
           <Button onClick={() => { props.setExibirTabela(true) }}>Voltar</Button>
         </Col>

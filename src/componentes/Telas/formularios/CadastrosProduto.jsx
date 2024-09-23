@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -65,15 +65,7 @@ export default function CadastroProduto(props) {
     console.log(`Componente : ${elemento} : ${valor}`)
   }
 
-  function manipularModoEdicao() {
 
-    if (props.modoEdicao) {
-      document.getElementById('botao').innerText = "Editar";
-    }
-    else {
-      document.getElementById('botao').innerText = "Cadastrar";
-    }
-  }
 
   // const handleSubmit = (event) => {  //METODO QUE JA VEIO COM O FORMULARIO PARA PODER VERIFICAR
   //   const form = event.currentTarget;
@@ -85,9 +77,6 @@ export default function CadastroProduto(props) {
   //   setValidated(true);
   // };
 
-  useEffect(() => {
-    manipularModoEdicao();
-  });
 
   return (
     <Form noValidate validated={formValidado} onSubmit={manipularSubmissao} className='container'>
@@ -95,6 +84,7 @@ export default function CadastroProduto(props) {
         <Form.Group as={Col} md="4" >
           <Form.Label>Código</Form.Label>
           <Form.Control type="number" required id="codigo"
+            disabled={props.modoEdicao}
             value={props.produto.codigo}
             onChange={manipularMudanca}
           />
@@ -191,7 +181,7 @@ export default function CadastroProduto(props) {
       </Form.Group>
       <Row className='mt-2 mb-2'>
         <Col md={1}>
-          <Button id="botao" type="submit">Cadastrar</Button>
+          <Button id="botao" type="submit">{props.modoEdicao ? "Alterar":"Cadastrar"}</Button>
 
         </Col>
         <Col md={{ offset: 1 }} >

@@ -1,10 +1,10 @@
-import { Alert, Button, Container , Table} from "react-bootstrap";
+import { Button, Container , Table} from "react-bootstrap";
 
 export default function TabelaFornecedor(props){
     function excluirFornecedor(fornecedor){
         if(window.confirm("Deseja realmente excluir este fornecedor: "+ fornecedor.nome)){
             props.setListaDeFornecedores(props.listaDeFornecedores.filter((item)=>{
-                return item.cnpj != fornecedor.cnpj;
+                return item.cnpj !== fornecedor.cnpj;
             }));
         }
     }
