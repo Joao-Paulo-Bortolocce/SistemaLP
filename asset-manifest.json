@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/SistemaLP/static/css/main.d221dc40.css",
+    "main.js": "/SistemaLP/static/js/main.cdeb837b.js",
+    "static/media/404.jpg": "/SistemaLP/static/media/404.d8977cc9bb870f7698bc.jpg",
+    "index.html": "/SistemaLP/index.html",
+    "main.d221dc40.css.map": "/SistemaLP/static/css/main.d221dc40.css.map",
+    "main.cdeb837b.js.map": "/SistemaLP/static/js/main.cdeb837b.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d221dc40.css",
+    "static/js/main.cdeb837b.js"
+  ]
+}
