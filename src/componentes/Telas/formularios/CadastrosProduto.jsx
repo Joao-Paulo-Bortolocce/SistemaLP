@@ -16,7 +16,7 @@ export default function CadastroProduto(props) {
       //Cadastrar o produto
       if (props.modoEdicao) {
         const prods = props.listaDeProdutos.map((item) => {
-          if (item.codigo == props.produto.codigo) {
+          if (item.codigo === props.produto.codigo) {
             // item.descricao=props.produto.descricao;
             // item.qtdEstoque=props.produto.qtdEstoque;
             // item.precoCusto= props.produto.precoCusto;
