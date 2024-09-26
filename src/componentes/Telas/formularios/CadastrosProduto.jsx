@@ -26,7 +26,7 @@ export default function CadastroProduto(props) {
             return props.produto;
           }
           else {
-            
+
             console.log("Diferentes")
             return item;
           }
@@ -126,25 +126,31 @@ export default function CadastroProduto(props) {
       <Row className="mb-3">
         <Form.Group as={Col} md="3" >
           <Form.Label>Preço de custo</Form.Label>
-          <Form.Control min="0" type="number" placeholder="Preço de custo" required
-            id="precoCusto"
-            value={props.produto.precoCusto}
-            onChange={manipularMudanca}
-          />
-          <Form.Control.Feedback type="invalid">
-            Por-favor informe o Preço de custo
-          </Form.Control.Feedback>
+          <InputGroup hasValidation>
+            <InputGroup.Text id="inputGroupPrepend">R$</InputGroup.Text>
+            <Form.Control min="0" type="number" placeholder="Preço de custo" required
+              id="precoCusto"
+              value={props.produto.precoCusto}
+              onChange={manipularMudanca}
+            />
+            <Form.Control.Feedback type="invalid">
+              Por-favor informe o Preço de custo
+            </Form.Control.Feedback>
+          </InputGroup>
         </Form.Group>
         <Form.Group as={Col} md="3" >
           <Form.Label>Preço de Venda</Form.Label>
-          <Form.Control min="0" type="number" placeholder="Preço de venda" required
-            id="precoVenda"
-            value={props.produto.precoVenda}
-            onChange={manipularMudanca}
-          />
-          <Form.Control.Feedback type="invalid">
-            Por-favor informe o Preço de venda
-          </Form.Control.Feedback>
+          <InputGroup hasValidation>
+            <InputGroup.Text id="inputGroupPrepend">R$</InputGroup.Text>
+            <Form.Control min="0" type="number" placeholder="Preço de venda" required
+              id="precoVenda"
+              value={props.produto.precoVenda}
+              onChange={manipularMudanca}
+            />
+            <Form.Control.Feedback type="invalid">
+              Por-favor informe o Preço de venda
+            </Form.Control.Feedback>
+          </InputGroup>
         </Form.Group>
       </Row>
       <Row className="mb-3">
@@ -181,7 +187,7 @@ export default function CadastroProduto(props) {
       </Form.Group>
       <Row className='mt-2 mb-2'>
         <Col md={1}>
-          <Button id="botao" type="submit">{props.modoEdicao ? "Alterar":"Cadastrar"}</Button>
+          <Button id="botao" type="submit">{props.modoEdicao ? "Alterar" : "Cadastrar"}</Button>
 
         </Col>
         <Col md={{ offset: 1 }} >

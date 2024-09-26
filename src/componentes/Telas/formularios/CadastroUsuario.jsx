@@ -3,10 +3,12 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
+import { InputGroup } from 'react-bootstrap';
 
 export default function CadastroUsuario(props) {
   const [validated, setValidated] = useState(false);
-
+  let visibilidade=props.usuario.tipo ==="adm" ? "visible" : "hidden";
+  
   const handleSubmit = (event) => {
     const form = event.currentTarget;
     if (form.checkValidity()) {
@@ -38,6 +40,9 @@ export default function CadastroUsuario(props) {
     const id = event.currentTarget.id;
     const valor = event.currentTarget.value;
     props.setUsuario({...props.usuario, [id]:valor})
+    if(id==="tipo"){
+        valor ==="adm" ? visibilidade="visible" : visibilidade="hidden"
+    }
   }
 
   return (
@@ -50,17 +55,23 @@ export default function CadastroUsuario(props) {
             Por-Favor informe o username da usuario
           </Form.Control.Feedback>
         </Form.Group>
-        <Form.Group as={Col} md="4" controlId="validationCustom01">
+        <Form.Group as={Col} md="5">
           <Form.Label>Email</Form.Label>
-          <Form.Control
-            required
-            type="text"
-            value={ props.usuario.email}
-            onChange={manipularMudanca}
-            id="email"
-            placeholder="MeuEmail@gmail.com"
-          />
-          <Form.Control.Feedback type='invalid'>Informe o Email da usuario</Form.Control.Feedback>
+          <InputGroup hasValidation>
+            <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
+            <Form.Control
+              type="password"
+              placeholder="E-mail"
+              aria-describedby="inputGroupPrepend"
+              required
+              id="email"
+              value={props.usuario.email}
+              onChange={manipularMudanca}
+            />
+            <Form.Control.Feedback type="invalid">
+              Por-favor informe seu e-mail
+            </Form.Control.Feedback>
+          </InputGroup>
         </Form.Group>
       </Row>
       <Row className="mb-6">
@@ -75,13 +86,14 @@ export default function CadastroUsuario(props) {
           <Form.Label>Senha de Administrador</Form.Label>
           <Form.Control
             required
-            type="text"
+            type="password"
             value={ props.usuario.senhaAdmin}
             onChange={manipularMudanca}
             id="senhaAdmin"
             placeholder="*******"
+            visibility={visibilidade}
           />
-          <Form.Control.Feedback type='invalid'>Informe o Email da usuario</Form.Control.Feedback>
+          <Form.Control.Feedback type='invalid'>Informe a senha correta</Form.Control.Feedback>
         </Form.Group>
         <Form.Group as={Col} md="3">
           <Form.Label>Tipo</Form.Label>

@@ -5,6 +5,7 @@ import TelaCadastroCategorias from "./componentes/Telas/TelaCadastroCategoria";
 import TelaCadastroFornecedor from "./componentes/Telas/TelaCadastroFornecedor";
 import TelaCadastroCliente from "./componentes/Telas/TelaCadastroCliente";
 import TelaCadastroUsuario from "./componentes/Telas/TelaCadastroUsuario";
+import TelaCadastroEntregador from "./componentes/Telas/TelaCadastroEntregador";
 import { BrowserRouter, Route , Routes} from "react-router-dom";
 import TelaMenu from "./componentes/Telas/TelaMenu";
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route path="/fornecedor" element={<TelaCadastroFornecedor />} />
           <Route path="/cliente" element={<TelaCadastroCliente />} />
           <Route path="/usuario" element={<TelaCadastroUsuario />} />
+          <Route path="/entregador" element={<TelaCadastroEntregador />} />
           <Route path="/" element={<TelaMenu />} />
           <Route path="*" element={<Tela404 />} />
         </Routes> {/* A ordem das rotas é importante, por isso o Tela404 vem por ultimo com o * que significa que qualquer rota chama ele, e então deve ser o ultimo se não será chamado sempre*/}
