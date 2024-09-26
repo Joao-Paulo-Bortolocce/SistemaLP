@@ -9,20 +9,40 @@ export default function CadastroCategoria(props) {
 
   const handleSubmit = (event) => {
     const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
+    if (form.checkValidity()) {
+      if(props.modoEdicao){
+        props.setListaDeCategorias(props.listaDeCategorias.map((item)=>{
+          return item.codigo === props.categoria.codigo? props.categoria : item
+        }));
+      }
+      else{
+        props.setListaDeCategorias([...props.listaDeCategorias,props.categoria]);
+      }
+      props.setCategoria({
+        "codigo":0,
+        "descricao": ""
+      });
+      props.setExibirTabela(true);
+      props.setModoEdicao(false);
     }
-
-    setValidated(true);
+    else
+      setValidated(true);
+    event.preventDefault();
+    event.stopPropagation();
   };
+
+  function manipularMudanca(event){
+    const id = event.currentTarget.id;
+    const valor = event.currentTarget.value;
+    props.setCategoria({...props.categoria, [id]:valor})
+  }
 
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit} className='container'>
       <Row className="mb-6">
         <Form.Group as={Col} md="3" controlId="validationCustom05">
           <Form.Label>Código</Form.Label>
-          <Form.Control type="number"  required />
+          <Form.Control type="number"  required   value={props.categoria.codigo} onChange={manipularMudanca} id="codigo"/>
           <Form.Control.Feedback type="invalid">
             Por-Favor informe o código da categoria
           </Form.Control.Feedback>
@@ -32,6 +52,9 @@ export default function CadastroCategoria(props) {
           <Form.Control
             required
             type="text"
+            value={ props.categoria.descricao}
+            onChange={manipularMudanca}
+            id="descricao"
             placeholder="Descrição"
           />
           <Form.Control.Feedback type='invalid'>Informe a Descrição da categoria</Form.Control.Feedback>
@@ -47,7 +70,7 @@ export default function CadastroCategoria(props) {
       </Form.Group>
       <Row>
 
-        <Col md={1}><Button type="submit">Cadastrar</Button></Col>
+        <Col md={1}><Button type="submit">{props.modoEdicao ? "Alterar": "Cadastrar"}</Button></Col>
         <Col md={{ offset: 1 }}>
           <Button onClick={() => { props.setExibirTabela(true) }}>Voltar</Button>
         </Col>
