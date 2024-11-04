@@ -1,14 +1,42 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Row from 'react-bootstrap/Row';
+import { Spinner } from 'react-bootstrap';
+import { consultarCategoria } from '../../../servicos/servicoCategoria.js';
+import toast,{Toaster} from 'react-hot-toast';
+import { gravarProduto } from '../../../servicos/servicoProduto.js';
+
 
 export default function CadastroProduto(props) {
   //const [validated, setValidated] = useState(false);
   const [formValidado, setFormValidado] = useState(false);
+  const [categorias, setCategorias] = useState([]);
+  const [temCategorias,setTemCategorias]= useState(false)
 
+
+  useEffect(() => {
+    consultarCategoria()
+      .then((resultado) => {
+        if (Array.isArray(resultado)) {
+          setCategorias(resultado);
+          setTemCategorias(true);
+        } else {
+          toast.error("Não foi possível carregar as categorias");
+        }
+      })
+      .catch((erro) => {
+        toast.error("Não foi possível carregar as categorias");
+      });
+  }, []);
+  
+  function selecionarCategoria(event){
+    props.setProduto({...props.produto, categoria:{
+      codigo:event.currentTarget.value
+    }})
+  }
 
   function manipularSubmissao(evento) {
     const form = evento.currentTarget;
@@ -37,7 +65,14 @@ export default function CadastroProduto(props) {
       //Exibir a tabela com o produto incluido
       else {
 
-        props.setListaDeProdutos([...props.listaDeProdutos, props.produto]);
+        gravarProduto(props.produto).then((resultado)=>{
+          if(resultado.status){
+            props.setExibirTabela(true);
+          }
+          else{
+              toast.error(resultado.mensagem)
+          }
+        })
       }
       props.setProduto({
         codigo: 0,
@@ -48,7 +83,7 @@ export default function CadastroProduto(props) {
         urlImagem: "",
         dtValidade: "31/12/3000"
       })
-      props.setExibirTabela(true);
+
 
     }
     else {
@@ -165,7 +200,7 @@ export default function CadastroProduto(props) {
             Por-favor informe a data de validade
           </Form.Control.Feedback>
         </Form.Group>
-        <Form.Group as={Col} md="6" >
+        <Form.Group as={Col} md="4" >
           <Form.Label>Url da imagem</Form.Label>
           <Form.Control type="text" required
             id="urlImagem"
@@ -175,6 +210,24 @@ export default function CadastroProduto(props) {
           <Form.Control.Feedback type="invalid">
             Por-favor informe a url da imagem
           </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group as={Col} md={3}>
+          <Form.Label>Categoria:</Form.Label>
+          <Form.Select aria-label="Default select example" id="categoria" name="categoria" onChange={selecionarCategoria}>
+            <option>Selecione uma categoria</option>
+            {// Criar em tempo de execução as categorias existentes no banco de dados
+              categorias.map((categoria) => {
+                return (
+                  <option value={categoria.codigo}>{categoria.descricao}</option>
+                )
+              })
+            }
+          </Form.Select>
+        </Form.Group>
+        <Form.Group as={Col} md={1}>
+         { !temCategorias? <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>: ""}
         </Form.Group>
       </Row>
       <Form.Group className="mb-3">
@@ -187,7 +240,7 @@ export default function CadastroProduto(props) {
       </Form.Group>
       <Row className='mt-2 mb-2'>
         <Col md={1}>
-          <Button id="botao" type="submit">{props.modoEdicao ? "Alterar" : "Cadastrar"}</Button>
+          <Button id="botao" disabled={!temCategorias} type="submit">{props.modoEdicao ? "Alterar" : "Cadastrar"}</Button>
 
         </Col>
         <Col md={{ offset: 1 }} >
@@ -197,6 +250,8 @@ export default function CadastroProduto(props) {
 
         </Col>
       </Row>
+      <Toaster position='top-right'/>
     </Form>
+    
   );
 }

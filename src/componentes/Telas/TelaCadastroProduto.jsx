@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Pagina from "../layouts/Pagina";
 import { Alert, Container } from "react-bootstrap";
 import CadastroProduto from "./formularios/CadastrosProduto";
 import TabelaProdutos from "./Tabelas/TabelaProdutos";
-import {produtos} from "../../dados/mockProdutos";
+//import {produtos} from "../../dados/mockProdutos";
+import { consultarProduto } from "../../servicos/servicoProduto.js";
 
 export default function TelaCadastroProdutos(){
     const[exibirTabela, setExibirTabela] = useState(true);
-    const[listaDeProdutos,setListaDeProdutos] = useState(produtos);
+    const[listaDeProdutos,setListaDeProdutos] = useState([]);
     const[modoEdicao,setModoEdicao]= useState(false);
     const[produto,setProduto]=useState({
         codigo:0,
@@ -16,9 +17,15 @@ export default function TelaCadastroProdutos(){
         precoVenda:0,   
         qtdEstoque:0,
         urlImagem:"",
-        dtValidade:""
+        dtValidade:"",
+        categoria:{}
       });
 
+      useEffect(()=>{
+        consultarProduto().then((lista)=>{
+            setListaDeProdutos(lista);
+        });
+      },[])
     return(
         <Container>
             <Pagina>

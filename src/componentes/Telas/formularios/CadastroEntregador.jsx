@@ -16,7 +16,7 @@ export default function CadastroEntregador(props) {
                 props.setListaEntregadores(props.listaEntregadores.map((item) => {
                     return item.cnh === props.entregador.cnh ? props.entregador : item
                 }));
-                props.modoEdicao(false);
+                props.setModoEdicao(false);
             }
             else
                 props.setListaEntregadores([...props.listaEntregadores, props.entregador]);
@@ -52,6 +52,7 @@ export default function CadastroEntregador(props) {
                         placeholder="nome"
                         id="nome"
                         value={props.entregador.nome}
+                        onChange={manipularMudanca}
                     />
                     <Form.Control.Feedback type="invalid">Informe seu nome</Form.Control.Feedback>
                 </Form.Group>
@@ -63,6 +64,7 @@ export default function CadastroEntregador(props) {
                         placeholder="00000000000"
                         id="cnh"
                         value={props.entregador.cnh}
+                        onChange={manipularMudanca}
                     />
                     <Form.Control.Feedback type="invalid">Informe sua CNH</Form.Control.Feedback>
                 </Form.Group>
@@ -91,7 +93,7 @@ export default function CadastroEntregador(props) {
             <Row className="mb-3">
                 <Form.Group as={Col} md="6" controlId="validationCustom03">
                     <Form.Label>Informe a placa</Form.Label>
-                    <Form.Control type="text" placeholder="ABC-1234" required />
+                    <Form.Control type="text" placeholder="ABC-1234" value={props.entregador.placa} required onChange={manipularMudanca}/>
                     <Form.Control.Feedback type="invalid">
                         Por favor informe a placa
                     </Form.Control.Feedback>
@@ -100,7 +102,7 @@ export default function CadastroEntregador(props) {
                     <Form.Label>Capacidade</Form.Label>
                     <InputGroup hasValidation>
                         <InputGroup.Text>KG</InputGroup.Text>
-                        <Form.Control type="number" required />
+                        <Form.Control type="number" required value={props.entregador.capacidade} onChange={manipularMudanca}/>
                         <Form.Control.Feedback type="invalid">
                             Por favor informe o peso máximo
                         </Form.Control.Feedback>
