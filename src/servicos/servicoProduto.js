@@ -1,4 +1,5 @@
-const urlBase= "bcc-backend-lp2.vercel.app/produtos";
+const urlBase= "http://localhost:4000/produtos";
+// const urlBase= "https://bcc-backend-lp2.vercel.app/produtos";
 
 export async function gravarProduto(produto){
     const resposta = await fetch(urlBase,{
@@ -8,12 +9,12 @@ export async function gravarProduto(produto){
         },
         "body":JSON.stringify(produto)
     })
-    const resultado = (await resposta).json();
-    return resultado;
+    const resultado = await resposta.json();
+    return await resultado;
 }
 
 export async function alterarProduto(produto){
-    const resposta = await fetch(urlBase,{
+    const resposta = await fetch(urlBase+"/"+produto.codigo,{
         "method": "PUT",
         "headers":{
             "Content-type":"application/json"
@@ -26,7 +27,7 @@ export async function alterarProduto(produto){
 }
 
 export async function excluirProduto(produto){
-    const resposta = await fetch(urlBase= "/"+ produto.codigo,{
+    const resposta = await fetch(urlBase+ "/"+ produto.codigo,{
         "method": "DELETE",
     
     })

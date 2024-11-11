@@ -26,7 +26,14 @@ export default function TelaCadastroProdutos(){
             setListaDeProdutos(lista);
         });
       },[])
-    return(
+
+      useEffect(()=>{
+        consultarProduto().then((lista)=>{
+            setListaDeProdutos(lista);
+        });
+      },[listaDeProdutos])
+
+      return(
         <Container>
             <Pagina>
                 <Alert className="mt-02 mb-02 success text-center">

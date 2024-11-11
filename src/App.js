@@ -8,24 +8,44 @@ import TelaCadastroUsuario from "./componentes/Telas/TelaCadastroUsuario";
 import TelaCadastroEntregador from "./componentes/Telas/TelaCadastroEntregador";
 import { BrowserRouter, Route , Routes} from "react-router-dom";
 import TelaMenu from "./componentes/Telas/TelaMenu";
-function App() {
-  return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/produto" element={<TelaCadastroProdutos />} />
-          <Route path="/categoria" element={<TelaCadastroCategorias />} />
-          <Route path="/fornecedor" element={<TelaCadastroFornecedor />} />
-          <Route path="/cliente" element={<TelaCadastroCliente />} />
-          <Route path="/usuario" element={<TelaCadastroUsuario />} />
-          <Route path="/entregador" element={<TelaCadastroEntregador />} />
-          <Route path="/" element={<TelaMenu />} />
-          <Route path="*" element={<Tela404 />} />
-        </Routes> {/* A ordem das rotas é importante, por isso o Tela404 vem por ultimo com o * que significa que qualquer rota chama ele, e então deve ser o ultimo se não será chamado sempre*/}
+import TelaLogin from "./componentes/Telas/TelaLogin";
+import { useState, createContext } from "react";
 
-      </BrowserRouter>
-    </div>
-  );
+export const ContextoUsuario= createContext();
+function App() {
+  const [usuario,setUsuario] = useState({
+    "usuario":"",
+    "logado":false
+  })
+
+  if(!usuario.logado){
+      return(
+        <ContextoUsuario.Provider value={setUsuario}>
+          <TelaLogin />
+        </ContextoUsuario.Provider>
+      )
+  }else{
+    return (
+      <div className="App">
+        <ContextoUsuario.Provider value={{usuario,setUsuario}}>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/produto" element={<TelaCadastroProdutos />} />
+              <Route path="/categoria" element={<TelaCadastroCategorias />} />
+              <Route path="/fornecedor" element={<TelaCadastroFornecedor />} />
+              <Route path="/cliente" element={<TelaCadastroCliente />} />
+              <Route path="/usuario" element={<TelaCadastroUsuario />} />
+              <Route path="/entregador" element={<TelaCadastroEntregador />} />
+              <Route path="/" element={<TelaMenu />} />
+              <Route path="*" element={<Tela404 />} />
+            </Routes> {/* A ordem das rotas é importante, por isso o Tela404 vem por ultimo com o * que significa que qualquer rota chama ele, e então deve ser o ultimo se não será chamado sempre*/}
+          </BrowserRouter>
+        </ContextoUsuario.Provider>
+      </div>
+    );
+  }
+
+  
 }
 
 export default App;

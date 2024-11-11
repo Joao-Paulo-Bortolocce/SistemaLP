@@ -8,6 +8,7 @@ import { Spinner } from 'react-bootstrap';
 import { consultarCategoria } from '../../../servicos/servicoCategoria.js';
 import toast,{Toaster} from 'react-hot-toast';
 import { gravarProduto } from '../../../servicos/servicoProduto.js';
+import { alterarProduto } from '../../../servicos/servicoProduto.js';
 
 
 export default function CadastroProduto(props) {
@@ -43,24 +44,40 @@ export default function CadastroProduto(props) {
     if (form.checkValidity()) {
       //Cadastrar o produto
       if (props.modoEdicao) {
-        const prods = props.listaDeProdutos.map((item) => {
-          if (item.codigo === props.produto.codigo) {
-            // item.descricao=props.produto.descricao;
-            // item.qtdEstoque=props.produto.qtdEstoque;
-            // item.precoCusto= props.produto.precoCusto;
-            // item.precoVenda=props.produto.precoVenda;
-            // item.urlImagem=props.produto.urlImagem;
-            // item.dtValidade= props.produto.dtValidade;
-            return props.produto;
-          }
-          else {
+        // const prods = props.listaDeProdutos.map((item) => {
+        //   if (item.codigo === props.produto.codigo) {
+        //     // item.descricao=props.produto.descricao;
+        //     // item.qtdEstoque=props.produto.qtdEstoque;
+        //     // item.precoCusto= props.produto.precoCusto;
+        //     // item.precoVenda=props.produto.precoVenda;
+        //     // item.urlImagem=props.produto.urlImagem;
+        //     // item.dtValidade= props.produto.dtValidade;
+        //     return props.produto;
+        //   }
+        //   else {
 
-            console.log("Diferentes")
-            return item;
+        //     console.log("Diferentes")
+        //     return item;
+        //   }
+        // });
+        alterarProduto(props.produto).then((resultado)=>{
+            if(resultado.status){
+              props.setExibirTabela(true);
+              props.setModoEdicao(false);
+              props.setProduto({
+                codigo: 0,
+                descricao: "",
+                precoCusto: 0,
+                precoVenda: 0,
+                qtdEstoque: 0,
+                urlImagem: "",
+                dtValidade: "31/12/3000"
+              })
+            }
+            else{
+              toast.error(resultado.mensagem)
           }
-        });
-        props.setListaDeProdutos(prods)
-        props.setModoEdicao(false);
+        })
       }
       //Exibir a tabela com o produto incluido
       else {
@@ -68,21 +85,21 @@ export default function CadastroProduto(props) {
         gravarProduto(props.produto).then((resultado)=>{
           if(resultado.status){
             props.setExibirTabela(true);
+            props.setProduto({
+              codigo: 0,
+              descricao: "",
+              precoCusto: 0,
+              precoVenda: 0,
+              qtdEstoque: 0,
+              urlImagem: "",
+              dtValidade: "31/12/3000"
+            })
           }
           else{
               toast.error(resultado.mensagem)
           }
         })
       }
-      props.setProduto({
-        codigo: 0,
-        descricao: "",
-        precoCusto: 0,
-        precoVenda: 0,
-        qtdEstoque: 0,
-        urlImagem: "",
-        dtValidade: "31/12/3000"
-      })
 
 
     }
@@ -163,7 +180,7 @@ export default function CadastroProduto(props) {
           <Form.Label>Preço de custo</Form.Label>
           <InputGroup hasValidation>
             <InputGroup.Text id="inputGroupPrepend">R$</InputGroup.Text>
-            <Form.Control min="0" type="number" placeholder="Preço de custo" required
+            <Form.Control min="0" type='number' placeholder="Preço de custo" required
               id="precoCusto"
               value={props.produto.precoCusto}
               onChange={manipularMudanca}
