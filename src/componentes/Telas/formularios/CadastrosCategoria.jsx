@@ -3,6 +3,9 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
+import { alterarCategoria } from '../../../servicos/servicoCategoria.js';
+import { gravarCategoria } from '../../../servicos/servicoCategoria.js';
+import toast,{Toaster} from 'react-hot-toast';
 
 export default function CadastroCategoria(props) {
   const [validated, setValidated] = useState(false);
@@ -11,19 +14,36 @@ export default function CadastroCategoria(props) {
     const form = event.currentTarget;
     if (form.checkValidity()) {
       if(props.modoEdicao){
-        props.setListaDeCategorias(props.listaDeCategorias.map((item)=>{
-          return item.codigo === props.categoria.codigo? props.categoria : item
-        }));
+        alterarCategoria(props.categoria).then((resultado)=>{
+          if(resultado.status){
+            props.setExibirTabela(true);
+            props.setModoEdicao(false);
+            props.setCategoria({
+              "codigo":0,
+              "descricao": ""
+            });
+
+          }
+          else{
+            toast.error(resultado.mensagem)
+          }
+        })
       }
       else{
-        props.setListaDeCategorias([...props.listaDeCategorias,props.categoria]);
+        gravarCategoria(props.categoria).then((resultado)=>{
+          if(resultado.status){
+            props.setExibirTabela(true);
+            props.setCategoria({
+              "codigo":0,
+              "descricao": ""
+            });
+            
+          }
+          else{
+            toast.error(resultado.mensagem)
+          }
+        })
       }
-      props.setCategoria({
-        "codigo":0,
-        "descricao": ""
-      });
-      props.setExibirTabela(true);
-      props.setModoEdicao(false);
     }
     else
       setValidated(true);
@@ -72,9 +92,12 @@ export default function CadastroCategoria(props) {
 
         <Col md={1}><Button type="submit">{props.modoEdicao ? "Alterar": "Cadastrar"}</Button></Col>
         <Col md={{ offset: 1 }}>
-          <Button onClick={() => { props.setExibirTabela(true) }}>Voltar</Button>
+          <Button onClick={() => { props.setExibirTabela(true);
+            props.setModoEdicao(false)
+           }}>Voltar</Button>
         </Col>
       </Row>
+      <Toaster position='top-right'/>
     </Form>
   );
 }

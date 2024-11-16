@@ -3,7 +3,9 @@ import Pagina from "../layouts/Pagina";
 import { Alert, Container } from "react-bootstrap";
 import { useState } from "react";
 import TabelaCategoria from "./Tabelas/TabelaCategorias";
-import { categorias } from "../../dados/mockCategoria.js";
+import { useEffect } from "react";
+// import { categorias } from "../../dados/mockCategoria.js";
+import { consultarCategoria } from "../../servicos/servicoCategoria.js";
 
 export default function TelaCadastroCategorias() {
     const [exibirTabela, setExibirTabela] = useState(true);
@@ -12,7 +14,26 @@ export default function TelaCadastroCategorias() {
         "codigo":0,
         "descricao": ""
     });
-    const [listaDeCategorias,setListaDeCategorias]=useState(categorias);
+    const [listaDeCategorias,setListaDeCategorias]=useState([]);
+
+    useEffect(()=>{
+        consultarCategoria().then((lista)=>{
+            if(lista.length>0)
+                setListaDeCategorias(lista);
+            else
+                setListaDeCategorias([])
+        });
+      },[])
+
+      useEffect(()=>{
+        consultarCategoria().then((lista)=>{
+            if(lista.length>0)
+                setListaDeCategorias(lista);
+            else
+                setListaDeCategorias([])
+        });
+      },[listaDeCategorias])
+
     return (
         <Container>
             <Pagina>

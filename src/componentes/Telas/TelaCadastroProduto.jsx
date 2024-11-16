@@ -17,7 +17,7 @@ export default function TelaCadastroProdutos(){
         precoVenda:0,   
         qtdEstoque:0,
         urlImagem:"",
-        dtValidade:"",
+        dtValidade:"2040-12-10",
         categoria:{}
       });
 

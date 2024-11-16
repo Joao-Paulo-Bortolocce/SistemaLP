@@ -71,7 +71,7 @@ export default function CadastroProduto(props) {
                 precoVenda: 0,
                 qtdEstoque: 0,
                 urlImagem: "",
-                dtValidade: "31/12/3000"
+                dtValidade: "3000-12-30"
               })
             }
             else{
@@ -92,7 +92,7 @@ export default function CadastroProduto(props) {
               precoVenda: 0,
               qtdEstoque: 0,
               urlImagem: "",
-              dtValidade: "31/12/3000"
+              dtValidade: "3000-12-30"
             })
           }
           else{
@@ -263,6 +263,7 @@ export default function CadastroProduto(props) {
         <Col md={{ offset: 1 }} >
           <Button onClick={() => {
             props.setExibirTabela(true);
+            props.setModoEdicao(false);
           }}>Voltar</Button>
 
         </Col>
