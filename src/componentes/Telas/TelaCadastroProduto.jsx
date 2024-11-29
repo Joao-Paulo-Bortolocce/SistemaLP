@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Pagina from "../layouts/Pagina";
 import { Alert, Container } from "react-bootstrap";
 import CadastroProduto from "./formularios/CadastrosProduto";
 import TabelaProdutos from "./Tabelas/TabelaProdutos";
 //import {produtos} from "../../dados/mockProdutos";
-import { consultarProduto } from "../../servicos/servicoProduto.js";
+
 
 export default function TelaCadastroProdutos(){
     const[exibirTabela, setExibirTabela] = useState(true);
-    const[listaDeProdutos,setListaDeProdutos] = useState([]);
+   
     const[modoEdicao,setModoEdicao]= useState(false);
     const[produto,setProduto]=useState({
         codigo:0,
@@ -21,17 +21,7 @@ export default function TelaCadastroProdutos(){
         categoria:{}
       });
 
-      useEffect(()=>{
-        consultarProduto().then((lista)=>{
-            setListaDeProdutos(lista);
-        });
-      },[])
-
-      useEffect(()=>{
-        consultarProduto().then((lista)=>{
-            setListaDeProdutos(lista);
-        });
-      },[listaDeProdutos])
+      
 
       return(
         <Container>
@@ -39,8 +29,8 @@ export default function TelaCadastroProdutos(){
                 <Alert className="mt-02 mb-02 success text-center">
                     <h2>Produtos</h2>
                 </Alert>
-                    {exibirTabela ? <TabelaProdutos setExibirTabela={setExibirTabela} listaDeProdutos={listaDeProdutos} setListaDeProdutos={setListaDeProdutos} setModoEdicao={setModoEdicao}  setProduto={setProduto}/> 
-                    : <CadastroProduto listaDeProdutos={listaDeProdutos} setExibirTabela={setExibirTabela} setListaDeProdutos={setListaDeProdutos} modoEdicao={modoEdicao} setModoEdicao={setModoEdicao} produto={produto} setProduto={setProduto}/>}
+                    {exibirTabela ? <TabelaProdutos setExibirTabela={setExibirTabela}  setModoEdicao={setModoEdicao}  setProduto={setProduto}/> 
+                    : <CadastroProduto  setExibirTabela={setExibirTabela}  modoEdicao={modoEdicao} setModoEdicao={setModoEdicao} produto={produto} setProduto={setProduto}/>}
             </Pagina>
         </Container>
     );

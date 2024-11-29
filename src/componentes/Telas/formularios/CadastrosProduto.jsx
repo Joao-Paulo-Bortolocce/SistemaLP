@@ -230,7 +230,7 @@ export default function CadastroProduto(props) {
         </Form.Group>
         <Form.Group as={Col} md={3}>
           <Form.Label>Categoria:</Form.Label>
-          <Form.Select aria-label="Default select example" id="categoria" name="categoria" onChange={selecionarCategoria}>
+          <Form.Select aria-label="Default select example" id="categoria" name="categoria" onChange={selecionarCategoria} value={props.produto.categoria.codigo}>
             <option>Selecione uma categoria</option>
             {// Criar em tempo de execução as categorias existentes no banco de dados
               categorias.map((categoria) => {
