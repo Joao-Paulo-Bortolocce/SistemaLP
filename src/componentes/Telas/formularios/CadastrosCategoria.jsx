@@ -1,48 +1,41 @@
 import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import { alterarCategoria } from '../../../servicos/servicoCategoria.js';
-import { gravarCategoria } from '../../../servicos/servicoCategoria.js';
-import toast,{Toaster} from 'react-hot-toast';
+import { Button,Form, Row, Col, Alert, Spinner } from "react-bootstrap";
+import  { Toaster } from 'react-hot-toast';
+import { useSelector, useDispatch } from 'react-redux';
+import { atualizarCategoria, incluirCategoria } from '../../../redux/categoriaReducer';
+import ESTADO from '../../../redux/estados';
+
 
 export default function CadastroCategoria(props) {
   const [validated, setValidated] = useState(false);
+  const { estado, mensagem } = useSelector((state) => state.categoria)
+  const dispachante = useDispatch();
+
+  function zeraCategoria() {
+    props.setCategoria({
+      "codigo": 0,
+      "descricao": ""
+    });
+  }
 
   const handleSubmit = (event) => {
     const form = event.currentTarget;
     if (form.checkValidity()) {
-      if(props.modoEdicao){
-        alterarCategoria(props.categoria).then((resultado)=>{
-          if(resultado.status){
-            props.setExibirTabela(true);
-            props.setModoEdicao(false);
-            props.setCategoria({
-              "codigo":0,
-              "descricao": ""
-            });
-
-          }
-          else{
-            toast.error(resultado.mensagem)
-          }
-        })
+      if (props.modoEdicao) {
+        dispachante(atualizarCategoria(props.categoria));
+        setTimeout(() => {
+          props.setExibirTabela(true);
+          props.setModoEdicao(false);
+          zeraCategoria();
+        }, 2000)
       }
-      else{
-        gravarCategoria(props.categoria).then((resultado)=>{
-          if(resultado.status){
-            props.setExibirTabela(true);
-            props.setCategoria({
-              "codigo":0,
-              "descricao": ""
-            });
-            
-          }
-          else{
-            toast.error(resultado.mensagem)
-          }
-        })
+      else {
+        dispachante(incluirCategoria(props.categoria));
+        setTimeout(() => {
+          props.setExibirTabela(true);
+          props.setModoEdicao(false);
+          zeraCategoria();
+        }, 2000)
       }
     }
     else
@@ -51,53 +44,78 @@ export default function CadastroCategoria(props) {
     event.stopPropagation();
   };
 
-  function manipularMudanca(event){
+  function manipularMudanca(event) {
     const id = event.currentTarget.id;
     const valor = event.currentTarget.value;
-    props.setCategoria({...props.categoria, [id]:valor})
+    props.setCategoria({ ...props.categoria, [id]: valor })
   }
 
-  return (
-    <Form noValidate validated={validated} onSubmit={handleSubmit} className='container'>
-      <Row className="mb-6">
-        <Form.Group as={Col} md="3" controlId="validationCustom05">
-          <Form.Label>Código</Form.Label>
-          <Form.Control type="number"  required   value={props.categoria.codigo} onChange={manipularMudanca} id="codigo"/>
-          <Form.Control.Feedback type="invalid">
-            Por-Favor informe o código da categoria
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group as={Col} md="4" controlId="validationCustom01">
-          <Form.Label>Descrição</Form.Label>
-          <Form.Control
-            required
-            type="text"
-            value={ props.categoria.descricao}
-            onChange={manipularMudanca}
-            id="descricao"
-            placeholder="Descrição"
-          />
-          <Form.Control.Feedback type='invalid'>Informe a Descrição da categoria</Form.Control.Feedback>
-        </Form.Group>
-      </Row>
-      <Form.Group className="mb-3">
-        <Form.Check
-          required
-          label="Concordo com os termos de uso"
-          feedback="Você tem que concordar antes de finalizar o cadastro"
-          feedbackType="invalid"
-        />
-      </Form.Group>
-      <Row>
+  if (estado === ESTADO.PENDENTE) {
+    return (
+      <div>
 
-        <Col md={1}><Button type="submit">{props.modoEdicao ? "Alterar": "Cadastrar"}</Button></Col>
-        <Col md={{ offset: 1 }}>
-          <Button onClick={() => { props.setExibirTabela(true);
-            props.setModoEdicao(false)
-           }}>Voltar</Button>
-        </Col>
-      </Row>
-      <Toaster position='top-right'/>
-    </Form>
-  );
+        <Spinner animation="border" role="status"></Spinner>
+        <Alert variant="primary">{mensagem}</Alert>
+      </div>
+    )
+  }
+  else
+    if (estado === ESTADO.ERRO) {
+      return (
+        <div>
+          <Alert variant="danger">{mensagem}</Alert>
+          <Button onClick={() => {
+            props.setExibirTabela(true);
+            props.setModoEdicao(false);
+          }}>Voltar</Button>
+        </div>
+      )
+    }
+    else {
+      return (
+        <Form noValidate validated={validated} onSubmit={handleSubmit} className='container'>
+          <Row className="mb-6">
+            <Form.Group as={Col} md="3" controlId="validationCustom05">
+              <Form.Label>Código</Form.Label>
+              <Form.Control type="number" required value={props.categoria.codigo} onChange={manipularMudanca} id="codigo" />
+              <Form.Control.Feedback type="invalid">
+                Por-Favor informe o código da categoria
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group as={Col} md="4" controlId="validationCustom01">
+              <Form.Label>Descrição</Form.Label>
+              <Form.Control
+                required
+                type="text"
+                value={props.categoria.descricao}
+                onChange={manipularMudanca}
+                id="descricao"
+                placeholder="Descrição"
+              />
+              <Form.Control.Feedback type='invalid'>Informe a Descrição da categoria</Form.Control.Feedback>
+            </Form.Group>
+          </Row>
+          <Form.Group className="mb-3">
+            <Form.Check
+              required
+              label="Concordo com os termos de uso"
+              feedback="Você tem que concordar antes de finalizar o cadastro"
+              feedbackType="invalid"
+            />
+          </Form.Group>
+          <Row>
+
+            <Col md={1}><Button type="submit">{props.modoEdicao ? "Alterar" : "Cadastrar"}</Button></Col>
+            <Col md={{ offset: 1 }}>
+              <Button onClick={() => {
+                props.setExibirTabela(true);
+                props.setModoEdicao(false)
+                zeraCategoria();
+              }}>Voltar</Button>
+            </Col>
+          </Row>
+          <Toaster position='top-right' />
+        </Form>
+      );
+    }
 }

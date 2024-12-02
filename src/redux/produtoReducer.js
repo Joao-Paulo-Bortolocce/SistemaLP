@@ -188,7 +188,7 @@ const produtoReducer = createSlice({
                 if(action.payload.status){
                     state.estado= ESTADO.OCIOSO;
                     state.mensagem= action.payload.mensagem;
-                    state.listaDeProdutos = state.listaDeProdutos.map((item)=> item.codigo === action.payload.codigo ? action.payload.produto : item)
+                    state.listaDeProdutos = state.listaDeProdutos.map((item)=> item.codigo === action.payload.produto.codigo ? action.payload.produto : item)
                 }
                 else{
                     state.estado = ESTADO.ERRO;

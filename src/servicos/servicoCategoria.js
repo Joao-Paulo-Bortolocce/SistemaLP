@@ -14,7 +14,7 @@ export async function gravarCategoria(categoria){
 }
 
 export async function alterarCategoria(categoria){
-    const resposta = await fetch(urlBase,{
+    const resposta = await fetch(urlBase+"/"+categoria.codigo,{
         'method':"PUT",
         'headers': { 
             'Content-Type':"application/json"
@@ -33,8 +33,8 @@ export async function excluirCategoria(categoria){
     return resultado;
 }
 
-export async function consultarCategoria() {
-    const resposta = await fetch(urlBase,{
+export async function consultarCategoria(codigo) {
+    const resposta = await fetch(urlBase+"/"+codigo,{
         'method':"GET"
     });
     const resultado = await resposta.json();
