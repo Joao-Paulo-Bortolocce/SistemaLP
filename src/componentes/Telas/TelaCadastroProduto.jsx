@@ -3,6 +3,7 @@ import Pagina from "../layouts/Pagina";
 import { Alert, Container } from "react-bootstrap";
 import CadastroProduto from "./formularios/CadastrosProduto";
 import TabelaProdutos from "./Tabelas/TabelaProdutos";
+
 //import {produtos} from "../../dados/mockProdutos";
 
 
@@ -17,8 +18,9 @@ export default function TelaCadastroProdutos(){
         precoVenda:0,   
         qtdEstoque:0,
         urlImagem:"",
-        dtValidade:"2040-12-10",
-        categoria:{}
+        dtValidade:"",
+        categoria:{},
+        fornecedor:{}
       });
 
       

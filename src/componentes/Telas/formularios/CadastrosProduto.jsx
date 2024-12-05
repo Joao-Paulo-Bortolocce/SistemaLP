@@ -4,8 +4,9 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Row from 'react-bootstrap/Row';
-import { Alert,Spinner } from 'react-bootstrap';
+import { Alert, Spinner } from 'react-bootstrap';
 import { consultarCategoria } from '../../../servicos/servicoCategoria.js';
+import { consultarFornecedor } from '../../../servicos/servicoFornecedor.js';
 import toast, { Toaster } from 'react-hot-toast';
 import { useSelector, useDispatch } from 'react-redux';
 import { incluirProduto, atualizarProduto } from '../../../redux/produtoReducer.js'
@@ -16,8 +17,10 @@ export default function CadastroProduto(props) {
   //const [validated, setValidated] = useState(false);
   const [formValidado, setFormValidado] = useState(false);
   const [categorias, setCategorias] = useState([]);
+  const [fornecedores, setFornecedores] = useState([]);
   const [temCategorias, setTemCategorias] = useState(false);
-  const { estado, mensagem} = useSelector((state) => state.produto);
+  const [temFornecedor, setTemFornecedor] = useState(false);
+  const { estado, mensagem } = useSelector((state) => state.produto);
   const despachante = useDispatch();
 
   /*useEffect(()=>{
@@ -40,6 +43,18 @@ export default function CadastroProduto(props) {
       .catch((erro) => {
         toast.error("Não foi possível carregar as categorias");
       });
+    consultarFornecedor("")
+      .then((resultado) => {
+        if (Array.isArray(resultado)) {
+          setFornecedores(resultado);
+          setTemFornecedor(true);
+        } else {
+          toast.error("Não foi possível carregar fornecedores");
+        }
+      })
+      .catch((erro) => {
+        toast.error("Não foi possível carregar os fornecedores");
+      });
   }, []);
 
   function selecionarCategoria(event) {
@@ -50,7 +65,15 @@ export default function CadastroProduto(props) {
     })
   }
 
-  function zeraProduto(){
+  function selecionarFornecedor(event) {
+    props.setProduto({
+      ...props.produto, fornecedor: {
+        cnpj: event.currentTarget.value
+      }
+    })
+  }
+
+  function zeraProduto() {
     props.setProduto({
       codigo: 0,
       descricao: "",
@@ -58,18 +81,20 @@ export default function CadastroProduto(props) {
       precoVenda: 0,
       qtdEstoque: 0,
       urlImagem: "",
-      dtValidade: "3000-12-30"
+      dtValidade: "",
+      categoria: {},
+      fornecedor: {}
     })
   }
-  
+
   function manipularSubmissao(evento) {
     const form = evento.currentTarget;
     if (form.checkValidity()) {
       //Cadastrar o produto
       if (props.modoEdicao) {
         // const prods = props.listaDeProdutos.map((item) => {
-          //   if (item.codigo === props.produto.codigo) {
-            //     // item.descricao=props.produto.descricao;
+        //   if (item.codigo === props.produto.codigo) {
+        //     // item.descricao=props.produto.descricao;
         //     // item.qtdEstoque=props.produto.qtdEstoque;
         //     // item.precoCusto= props.produto.precoCusto;
         //     // item.precoVenda=props.produto.precoVenda;
@@ -78,7 +103,7 @@ export default function CadastroProduto(props) {
         //     return props.produto;
         //   }
         //   else {
-          
+
         //     console.log("Diferentes")
         //     return item;
         //   }
@@ -101,25 +126,26 @@ export default function CadastroProduto(props) {
                 toast.error(resultado.mensagem)
             }
             })*/
-           
-           despachante(atualizarProduto(props.produto));
-            setTimeout(()=>{
-            props.setExibirTabela(true);
-            zeraProduto();
 
-            },5000)           
+        despachante(atualizarProduto(props.produto));
+        setTimeout(() => {
+          props.setExibirTabela(true);
+          props.setModoEdicao(false);
+          zeraProduto();
+
+        }, 5000)
 
       }
       //Exibir a tabela com o produto incluido
       else {
 
         despachante(incluirProduto(props.produto));
-        setTimeout(()=>{
+        setTimeout(() => {
           props.setExibirTabela(true);
           zeraProduto();
 
-        },5000)
-        
+        }, 5000)
+
         /*gravarProduto(props.produto).then((resultado) => {
           if (resultado.status) {
           }
@@ -171,9 +197,9 @@ export default function CadastroProduto(props) {
         <div>
           <Alert variant="danger">{mensagem}</Alert>
           <Button onClick={() => {
-           props.setExibirTabela(true);
-           props.setModoEdicao(false);
-         }}>Voltar</Button>
+            props.setExibirTabela(true);
+            props.setModoEdicao(false);
+          }}>Voltar</Button>
         </div>
       )
     }
@@ -254,6 +280,24 @@ export default function CadastroProduto(props) {
                 </Form.Control.Feedback>
               </InputGroup>
             </Form.Group>
+            <Form.Group as={Col} md={3}>
+              <Form.Label>Fornecedor:</Form.Label>
+              <Form.Select aria-label="Default select example" id="fornecedor" name="fornecedor" onChange={selecionarFornecedor} value={props.produto.fornecedor.cnpj}>
+                <option>Selecione um Fornecedor</option>
+                {// Criar em tempo de execução as categorias existentes no banco de dados
+                  fornecedores.map((fornecedor) => {
+                    return (
+                      <option value={fornecedor.cnpj}>{fornecedor.nome}</option>
+                    )
+                  })
+                }
+              </Form.Select>
+            </Form.Group>
+            <Form.Group as={Col} md={1}>
+              {!temFornecedor ? <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner> : ""}
+            </Form.Group>
           </Row>
           <Row className="mb-3">
             <Form.Group as={Col} md="3" >
@@ -261,7 +305,8 @@ export default function CadastroProduto(props) {
               <Form.Control type="date" required
                 id="dtValidade"
                 onChange={manipularMudanca}
-                />
+                value={props.produto.dtValidade.substr(0, 10)}
+              />
               <Form.Control.Feedback type="invalid">
                 Por-favor informe a data de validade
               </Form.Control.Feedback>

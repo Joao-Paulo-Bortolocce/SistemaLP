@@ -1,33 +1,33 @@
-const urlBase= "http://localhost:4000/produtos";
-// const urlBase= "https://bcc-backend-lp2.vercel.app/produtos";
+const urlBase= "http://localhost:4000/fornecedores";
+// const urlBase= "https://bcc-backend-lp2.vercel.app/fornecedores";
 
-export async function gravarProduto(produto){
+export async function gravarFornecedor(fornecedor){
     const resposta = await fetch(urlBase,{
         "method": "POST",
         "headers":{
             "Content-type":"application/json"
         },
-        "body":JSON.stringify(produto)
+        "body":JSON.stringify(fornecedor)
     })
     const resultado = await resposta.json();
     return await resultado;
 }
 
-export async function alterarProduto(produto){
-    const resposta = await fetch(urlBase+"/"+produto.codigo,{
+export async function alterarFornecedor(fornecedor){
+    const resposta = await fetch(urlBase,{
         "method": "PUT",
         "headers":{
             "Content-type":"application/json"
         },
-        "body":JSON.stringify(produto)
+        "body":JSON.stringify(fornecedor)
     })
     const resultado = await resposta.json();
     return resultado;
     
 }
 
-export async function excluirProduto(produto){
-    const resposta = await fetch(urlBase+ "/"+ produto.codigo,{
+export async function excluirFornecedor(fornecedor){
+    const resposta = await fetch(urlBase+ "/"+ fornecedor.cnpj,{
         "method": "DELETE",
     
     })
@@ -36,11 +36,10 @@ export async function excluirProduto(produto){
     
 }
 
-export async function consultarProduto(){
-    const resposta = await fetch(urlBase,{
+export async function consultarFornecedor(termo){
+    const resposta = await fetch(urlBase+"/"+termo,{
         "method": "GET",
     })
     const resultado =await  resposta.json();
     return resultado;
-    
 }

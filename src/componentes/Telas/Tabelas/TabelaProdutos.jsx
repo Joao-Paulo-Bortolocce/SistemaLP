@@ -33,7 +33,8 @@ export default function TabelaProdutos(props) {
             qtdEstoque: produto.qtdEstoque,
             urlImagem: produto.urlImagem,
             dtValidade: produto.dataValidade,
-            categoria: produto.categoria
+            categoria: produto.categoria,
+            fornecedor: produto.fornecedor
         });
     }
     if (estado === ESTADO.PENDENTE) {
