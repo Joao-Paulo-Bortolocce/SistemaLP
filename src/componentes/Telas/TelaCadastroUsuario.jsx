@@ -1,13 +1,12 @@
 import { Container,Alert } from "react-bootstrap";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import Pagina from "../layouts/Pagina";
 import TabelaUsuario from "./Tabelas/TabelaUsuario";
 import CadastroUsuario from "./formularios/CadastroUsuario";
 
 export default function TelaCadastroUsuario(){
     const[exibirTabela, setExibirTabela] = useState(true);
-    const[listaDeUsuarios,setListaDeUsuarios] = useState([]);
+    // const[listaDeUsuarios,setListaDeUsuarios] = useState([]); ISSO AQ VAI TIRAR? É Q TA DANDO ERRO NA HORA Q TO TESTANDO
     const[modoEdicao,setModoEdicao]= useState(false);
     const[usuario,setUsuario]=useState({
         "username":"",
@@ -17,7 +16,6 @@ export default function TelaCadastroUsuario(){
         "senhaAdmin":""
       });
 
-      
       return(
         <Container>
             <Pagina>
@@ -27,15 +25,11 @@ export default function TelaCadastroUsuario(){
                 {exibirTabela ? 
                 <TabelaUsuario 
                 setExibirTabela={setExibirTabela} 
-                listaDeUsuarios={listaDeUsuarios} 
-                setListaDeUsuarios={setListaDeUsuarios}
                  setModoEdicao={setModoEdicao}  
                  setUsuario={setUsuario}/> 
                 : 
                 <CadastroUsuario 
                 setExibirTabela={setExibirTabela} 
-                listaDeUsuarios={listaDeUsuarios} 
-                setListaDeUsuarios={setListaDeUsuarios} 
                 setModoEdicao={setModoEdicao}  
                 setUsuario={setUsuario} 
                 modoEdicao={modoEdicao} 

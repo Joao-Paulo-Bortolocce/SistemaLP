@@ -35,12 +35,12 @@ export const buscarUsuarios = createAsyncThunk('buscarUsuarios', async () => {
 
 export const apagarUsuario= createAsyncThunk('apagarUsuario', async (usuario)=>{
     //dar previsibilidade  ao conteudo do payload
-    const resultado = await excluirProduto(usuario);
+    const resultado = await excluirUsuario(usuario);
     try {
         return {
             "status": resultado.status,
             "mensagem": resultado.mensagem,
-            "codigo":usuarios.id
+            "codigo":usuario.id
         }
     } catch (erro) {
         return {

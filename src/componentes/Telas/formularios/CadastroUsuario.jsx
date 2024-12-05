@@ -1,24 +1,28 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { InputGroup } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { buscarUsuarios, alterarUsuario } from "../../../redux/usuarioReducer";
 
 export default function CadastroUsuario(props) {
   const [validated, setValidated] = useState(false);
   let visibilidade=props.usuario.tipo ==="adm" ? "visible" : "hidden";
-  
+  const despachante = useDispatch();
+  const {estado,mensagem,listaDeUsuarios} = useSelector((state)=>state.usuario);
+
+
+
   const handleSubmit = (event) => {
     const form = event.currentTarget;
     if (form.checkValidity()) {
       if(props.modoEdicao){
-        props.setListaDeUsuarios(props.listaDeUsuarios.map((item)=>{
-          return item.username === props.usuario.username ? props.usuario : item;
-        }));
+        despachante(alterarUsuario(props.usuario))
       }
       else{
-        props.setListaDeUsuarios([...props.listaDeUsuarios,props.usuario]);
+        despachante(incluirUsuario(props.usuario))
       }
       props.setUsuario({
         "username":"",

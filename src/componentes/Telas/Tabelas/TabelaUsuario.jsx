@@ -1,10 +1,17 @@
-import { Button, Container, Table } from "react-bootstrap";
+import { Button, Container, Table, Alert } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import ESTADO from "../../../redux/estados";
+import { buscarUsuarios, alterarUsuario, excluirUsuario } from "../../../redux/usuarioReducer";
 export default function TabelaUsuario(props) {
+
+const despachante = useDispatch();
+const {estado,mensagem,listaDeUsuarios} = useSelector((state)=>state.usuario);
+
+
     function excluirUsuario(usuario){
         if(window.confirm("Deseja realmente excluir este usuario")){
-            props.setListaDeUsuarios(props.listaDeUsuarios.filter((item)=>{
-                return item.username!== usuario.username;
-            }));
+            despachante(excluirUsuario(usuario))
         }
     }
 
@@ -20,6 +27,12 @@ export default function TabelaUsuario(props) {
         });
     }
 
+    useEffect(()=>{
+        despachante(buscarUsuarios());
+    },[despachante])
+
+
+    if(estado === ESTADO.OCIOSO)
     return (
         <>
             <Container>
@@ -37,7 +50,7 @@ export default function TabelaUsuario(props) {
                     </thead>
                     <tbody>
                         {
-                            props.listaDeUsuarios?.map((usuario) => {
+                            listaDeUsuarios?.map((usuario) => {
                                 return (
                                     <tr>
                                         <td>{usuario.username}</td>
@@ -66,4 +79,10 @@ export default function TabelaUsuario(props) {
             </Container>
         </>
     );
+    else
+    {
+        return(
+            <Alert variant="danger">{mensagem}</Alert>
+        );
+    }
 }
