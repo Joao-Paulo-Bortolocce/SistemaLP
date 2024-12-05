@@ -1,5 +1,5 @@
-const urlBase= "http://localhost:4000/fornecedores";
-// const urlBase= "https://bcc-backend-lp2.vercel.app/fornecedores";
+// const urlBase= "http://localhost:4000/fornecedores";
+const urlBase= "https://bcc-backend-lp2.vercel.app/fornecedores";
 
 export async function gravarFornecedor(fornecedor){
     const resposta = await fetch(urlBase,{
