@@ -1,4 +1,4 @@
-// const urlBase= "http://localhost:4000/produtos";
+// const urlBase= "http://localhost:4000/usuarios";
 const urlBase= "https://bcc-backend-lp2.vercel.app/usuarios";
 
 export async function gravarUsuario(usuario){
@@ -14,7 +14,7 @@ export async function gravarUsuario(usuario){
 }
 
 export async function alterarUsuario(usuario){
-    const resposta = await fetch(urlBase+"/"+usuario.id,{
+    const resposta = await fetch(urlBase,{
         "method": "PUT",
         "headers":{
             "Content-type":"application/json"
@@ -22,7 +22,7 @@ export async function alterarUsuario(usuario){
         "body":JSON.stringify(usuario)
     })
     const resultado = await resposta.json();
-    return await resultado;
+    return resultado;
     
 }
 
@@ -32,15 +32,14 @@ export async function excluirUsuario(usuario){
     
     })
     const resultado = await  resposta.json();
-    return await resultado;
+    return resultado;
     
 }
 
-export async function consultarUsuario(id){
-    const resposta = await fetch(urlBase+'/'+id,{
+export async function consultarUsuario(termo){
+    const resposta = await fetch(urlBase+"/"+termo,{
         "method": "GET",
     })
     const resultado =await  resposta.json();
     return resultado;
-    
 }

@@ -1,19 +1,32 @@
 import { createSlice } from "@reduxjs/toolkit";
 import ESTADO from "./estados.js";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { consultarUsuario,excluirUsuario, gravarUsuario, alterarUsuario } from "../servicos/servicoUsuario.js";
+import { consultarUsuario,excluirUsuario, gravarUsuario, alterarUsuario } from "../servicos/servicoUsuario";
 
+function adicionaID(linha,id){
+    return({
+        "id":id,
+        "username": linha.username,
+        "senha": linha.senha,
+        "email": linha.email,
+        "tipo": linha.tipo,
+    })
+}
 
-
-export const buscarUsuarios = createAsyncThunk('buscarUsuarios', async () => {
-    const resultado = await consultarUsuario();
+export const buscarUsuarios = createAsyncThunk('buscarUsuarios', async (termo) => {
+    const resultado = await consultarUsuario(termo);
     try {
 
-        if (Array.isArray(resultado)) {
+        if (Array.isArray(resultado.listaDeUsuarios)) {
+            let listaUsuarios=[];
+            for(let i=0;i<resultado.listaDeUsuarios.length;i++){
+                let linha= adicionaID(resultado.listaDeUsuarios[i],resultado.listaDeIds[i])
+                listaUsuarios.push(linha)
+            }
             return {
                 "status": true,
                 "mensagem": "Usuarios recuperados com sucesso",
-                "listaDeUsuarios":resultado
+                "listaDeUsuarios":listaUsuarios
             }
         }
         else {
@@ -34,13 +47,12 @@ export const buscarUsuarios = createAsyncThunk('buscarUsuarios', async () => {
 });
 
 export const apagarUsuario= createAsyncThunk('apagarUsuario', async (usuario)=>{
-    //dar previsibilidade  ao conteudo do payload
     const resultado = await excluirUsuario(usuario);
     try {
         return {
             "status": resultado.status,
             "mensagem": resultado.mensagem,
-            "codigo":usuario.id
+            "id":usuario.id
         }
     } catch (erro) {
         return {
@@ -56,8 +68,8 @@ export const incluirUsuario = createAsyncThunk('incluirUsuario', async (usuario)
     try{
 
         const resultado = await gravarUsuario(usuario);
+        usuario.id=resultado.id
         if(resultado.status){
-            usuario.id = resultado.id;
             return {
                 "status": resultado.status,
                 "mensagem": resultado.mensagem,
@@ -84,7 +96,6 @@ export const atualizarUsuario = createAsyncThunk('atualizarUsuario', async (usua
 
         const resultado = await alterarUsuario(usuario);
         if(resultado.status){
-            usuario.id = resultado.id;
             return {
                 "status": resultado.status,
                 "mensagem": resultado.mensagem,
@@ -112,34 +123,33 @@ const usuarioReducer = createSlice({
     initialState: {
         estado: ESTADO.OCIOSO,
         mensagem: "",
-        listaDeUsuarios: []
+        listaDeUsuarios: [],
+        inserido:false
     },
     reducers: {},
     extraReducers: (builder) => {
-        builder.addCase(buscarUsuarios.pending, (state, action) => {
+        builder.addCase(buscarUsuarios.pending, (state) => {
             state.estado=ESTADO.PENDENTE
             state.mensagem= "Processando requisição (buscando usuarios)"
         })
         .addCase(buscarUsuarios.fulfilled, (state, action) => { 
                 if(action.payload.status){
                     state.estado=ESTADO.OCIOSO
-                    state.mensagem=action.payload.mensagem
-                    state.listaDeUsuarios=action.payload.listaDeUsuarios
                 }
                 else{
                     state.estado=ESTADO.ERRO;
-                    state.mensagem=action.payload.mensagem
-                    state.listaDeUsuarios=action.payload.listaDeUsuarios
                 }
+                state.mensagem=action.payload.mensagem
+                state.listaDeUsuarios=action.payload.listaDeUsuarios
             })
             .addCase(buscarUsuarios.rejected, (state, action) => {
                 state.estado=ESTADO.ERRO
                 state.mensagem=action.payload.mensagem
                 state.listaDeUsuarios=action.payload.listaDeUsuarios
             })
-            .addCase(apagarUsuario.pending, (state, action)=>{
+            .addCase(apagarUsuario.pending, (state)=>{
                 state.estado = ESTADO.PENDENTE
-                state.mensagem = "Processando requisição (excluiindo o produto do backend)"
+                state.mensagem = "Processando requisição (excluindo o usuario do backend)"
             })
             .addCase(apagarUsuario.fulfilled, (state,action)=>{
                 state.mensagem= action.payload.mensagem
@@ -152,20 +162,24 @@ const usuarioReducer = createSlice({
             })
             .addCase(apagarUsuario.rejected, (state,action)=>{
                 state.estado=ESTADO.ERRO
+                state.mensagem=action.payload.mensagem
             })
-            .addCase(incluirUsuario.pending,(state,action)=>{
+            .addCase(incluirUsuario.pending,(state)=>{
                 state.estado=ESTADO.PENDENTE;
                 state.mensagem="Processando a requisição (inclusão do usuario no backend)"
             })
             .addCase(incluirUsuario.fulfilled,(state,action)=>{
+                state.mensagem= action.payload.mensagem;
                 if(action.payload.status){
                     state.estado= ESTADO.OCIOSO;
-                    state.mensagem= action.payload.mensagem;
+                    state.inserido=true;    
                     state.listaDeUsuarios.push(action.payload.usuario)
                 }
                 else{
-                    state.estado = ESTADO.ERRO;
-                    state.mensagem= action.payload.mensagem;
+                    state.estado= ESTADO.erro;
+                    setTimeout(()=>{
+                        state.estado= ESTADO.OCIOSO;
+                    },3000)  
                 }
             })
             .addCase(incluirUsuario.rejected,(state,action)=>{
@@ -173,19 +187,18 @@ const usuarioReducer = createSlice({
                 state.mensagem= action.payload.mensagem;
 
             })
-            .addCase(atualizarUsuario.pending,(state,action)=>{
+            .addCase(atualizarUsuario.pending,(state)=>{
                 state.estado=ESTADO.PENDENTE;
                 state.mensagem="Processando a requisição (Atualização do usuario no backend)"
             })
             .addCase(atualizarUsuario.fulfilled,(state,action)=>{
+                state.mensagem= action.payload.mensagem;
                 if(action.payload.status){
                     state.estado= ESTADO.OCIOSO;
-                    state.mensagem= action.payload.mensagem;
                     state.listaDeUsuarios = state.listaDeUsuarios.map((item)=> item.id === action.payload.usuario.id ? action.payload.usuario : item)
                 }
                 else{
                     state.estado = ESTADO.ERRO;
-                    state.mensagem= action.payload.mensagem;
                 }
             })
             .addCase(atualizarUsuario.rejected,(state,action)=>{

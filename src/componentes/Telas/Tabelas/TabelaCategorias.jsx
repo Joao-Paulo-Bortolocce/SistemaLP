@@ -44,6 +44,7 @@ export default function TabelaCategoria(props) {
                     <Button onClick={() => {
                         props.setExibirTabela(true);
                         props.setModoEdicao(false);
+                        dispachante(buscarCategoria(""))
                     }}>Voltar</Button>
                 </div>
             )
@@ -87,6 +88,7 @@ export default function TabelaCategoria(props) {
                                 }
                             </tbody>
                         </Table>
+                        <p>Quantidade de categorias cadastradas: {listaDeCategorias.length}</p>
                     </Container>
                     <Toaster position='top-right' />
                 </>

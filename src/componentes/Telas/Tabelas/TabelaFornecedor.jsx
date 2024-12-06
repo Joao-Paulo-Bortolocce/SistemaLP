@@ -51,6 +51,7 @@ export default function TabelaFornecedor(props) {
                     <Button onClick={() => {
                         props.setExibirTabela(true);
                         props.setModoEdicao(false);
+                        dispachante(buscarFornecedores(""))
                     }}>Voltar</Button>
                 </div>
             )
@@ -102,6 +103,7 @@ export default function TabelaFornecedor(props) {
                             }
                         </tbody>
                     </Table>
+                    <p>Quantidade de fornecedores cadastrados: {listaDeFornecedores.length}</p>
                 </Container>
             );
         }

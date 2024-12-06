@@ -8,33 +8,50 @@ import { useDispatch, useSelector } from 'react-redux';
 import { incluirUsuario, atualizarUsuario } from "../../../redux/usuarioReducer";
 import { Alert, Spinner } from 'react-bootstrap';
 import ESTADO from '../../../redux/estados';
+import { useContext } from "react";
+import { ContextoUsuario } from "../../../App";
 
 export default function CadastroUsuario(props) {
+  const { usuario , setUsuario} = useContext(ContextoUsuario)
   const [validated, setValidated] = useState(false);
-  let visibilidade = props.usuario.tipo === "adm" ? "visible" : "hidden";
   const despachante = useDispatch();
   const { estado, mensagem } = useSelector((state) => state.usuario);
 
+  function limpaUser(){
+    props.setUsuario({
+      "id": 0,
+      "username": "",
+      "senha": "",
+      "email": "",
+      "tipo": 0,
+      "senhaAdmin": ""
+    });
 
+  }
 
   const handleSubmit = (event) => {
     const form = event.currentTarget;
     if (form.checkValidity()) {
       if (props.modoEdicao) {
         despachante(atualizarUsuario(props.usuario))
+        if(usuario.id===props.usuario.id){
+
+          setUsuario({
+              "id": props.usuario.id,
+              "username": props.usuario.username,
+              "senha": props.usuario.senha,
+              "email": props.usuario.email,
+              "tipo": props.usuario.tipo,
+              "logado": true
+          })
+        }
       }
       else {
         despachante(incluirUsuario(props.usuario))
       }
-      props.setUsuario({
-        "username": "",
-        "senha": "",
-        "email": "",
-        "tipo": 0,
-        "senhaAdmin": ""
-      });
       props.setExibirTabela(true);
       props.setModoEdicao(false);
+      limpaUser()
     }
     else
       setValidated(true);
@@ -46,9 +63,6 @@ export default function CadastroUsuario(props) {
     const id = event.currentTarget.id;
     const valor = event.currentTarget.value;
     props.setUsuario({ ...props.usuario, [id]: valor })
-    if (id === "tipo") {
-      valor === "adm" ? visibilidade = "visible" : visibilidade = "hidden"
-    }
   }
 
   if (estado === ESTADO.PENDENTE) {
@@ -78,6 +92,11 @@ export default function CadastroUsuario(props) {
         <Form noValidate validated={validated} onSubmit={handleSubmit} className='container'>
           <Row className="mb-6">
             <Form.Group as={Col} md="3" controlId="validationCustom05">
+              <Form.Label>ID</Form.Label>
+              <Form.Control type="text" required value={props.usuario.id} onChange={manipularMudanca} disabled={true} id="username" />
+
+            </Form.Group>
+            <Form.Group as={Col} md="3" controlId="validationCustom05">
               <Form.Label>username</Form.Label>
               <Form.Control type="text" required value={props.usuario.username} onChange={manipularMudanca} id="username" />
               <Form.Control.Feedback type="invalid">
@@ -89,7 +108,7 @@ export default function CadastroUsuario(props) {
               <InputGroup hasValidation>
                 <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
                 <Form.Control
-                  type="password"
+                  type="text"
                   placeholder="E-mail"
                   aria-describedby="inputGroupPrepend"
                   required
@@ -106,30 +125,33 @@ export default function CadastroUsuario(props) {
           <Row className="mb-6">
             <Form.Group as={Col} md="4" controlId="validationCustom05">
               <Form.Label>Senha</Form.Label>
-              <Form.Control type="text" required value={props.usuario.senha} onChange={manipularMudanca} id="senha" placeholder='******' />
+              <Form.Control type="password" required value={props.usuario.senha} onChange={manipularMudanca} id="senha" placeholder='******' />
               <Form.Control.Feedback type="invalid">
                 Por-Favor informe a senha da usuario
               </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group as={Col} md="4" controlId="validationCustom01">
+            {props.usuario.tipo === "adm" ? <Form.Group as={Col} md="4" controlId="validationCustom01">
               <Form.Label>Senha de Administrador</Form.Label>
               <Form.Control
                 required
                 type="password"
                 value={props.usuario.senhaAdmin}
                 onChange={manipularMudanca}
+                disabled={usuario.tipo!=="adm"}
                 id="senhaAdmin"
                 placeholder="*******"
-                visibility={visibilidade}
               />
               <Form.Control.Feedback type='invalid'>Informe a senha correta</Form.Control.Feedback>
-            </Form.Group>
+            </Form.Group>:
+            ""
+            }
             <Form.Group as={Col} md="3">
               <Form.Label>Tipo</Form.Label>
               <Form.Select
                 aria-label="tipo"
                 required
                 id="tipo"
+                disabled={usuario.tipo!=="adm"}
                 value={props.usuario.tipo}
                 onChange={manipularMudanca}
               >
@@ -154,7 +176,10 @@ export default function CadastroUsuario(props) {
 
             <Col md={1}><Button type="submit">{props.modoEdicao ? "Alterar" : "Cadastrar"}</Button></Col>
             <Col md={{ offset: 1 }}>
-              <Button onClick={() => { props.setExibirTabela(true) }}>Voltar</Button>
+              <Button onClick={() => { props.setExibirTabela(true) 
+                props.setModoEdicao(false)
+                limpaUser()
+              }}>Voltar</Button>
             </Col>
           </Row>
         </Form>

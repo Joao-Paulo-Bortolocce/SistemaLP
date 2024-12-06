@@ -5,31 +5,35 @@ import TelaCadastroCategorias from "./componentes/Telas/TelaCadastroCategoria";
 import TelaCadastroFornecedor from "./componentes/Telas/TelaCadastroFornecedor";
 import TelaCadastroCliente from "./componentes/Telas/TelaCadastroCliente";
 import TelaCadastroUsuario from "./componentes/Telas/TelaCadastroUsuario";
-import { BrowserRouter, Route , Routes} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import TelaMenu from "./componentes/Telas/TelaMenu";
 import TelaLogin from "./componentes/Telas/TelaLogin";
 import { useState, createContext } from "react";
 import store from "./redux/store.js";
 import { Provider } from "react-redux";
 
-export const ContextoUsuario= createContext();
+export const ContextoUsuario = createContext();
 function App() {
-  const [usuario,setUsuario] = useState({
-    "usuario":"",
-    "logado":false
+  const [usuario, setUsuario] = useState({
+    "id": 0,
+    "username": "",
+    "senha": "",
+    "email": "",
+    "tipo": "",
+    "logado": false
   })
 
-  if(!usuario.logado){
-      return(
-        <ContextoUsuario.Provider value={setUsuario}>
-          <TelaLogin />
-        </ContextoUsuario.Provider>
-      )
-  }else{
+  if (!usuario.logado) {
+    return (
+      <ContextoUsuario.Provider value={setUsuario}>
+        <TelaLogin />
+      </ContextoUsuario.Provider>
+    )
+  } else {
     return (
       <div className="App">
         <Provider store={store}>
-          <ContextoUsuario.Provider value={{usuario,setUsuario}}>
+          <ContextoUsuario.Provider value={{ usuario, setUsuario }}>
             <BrowserRouter>
               <Routes>
                 <Route path="/produto" element={<TelaCadastroProdutos />} />
@@ -47,7 +51,7 @@ function App() {
     );
   }
 
-  
+
 }
 
 export default App;

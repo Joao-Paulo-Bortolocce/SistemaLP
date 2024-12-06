@@ -50,6 +50,7 @@ export default function TabelaCliente(props) {
                     <Button onClick={() => {
                         props.setExibirTabela(true);
                         props.setModoEdicao(false);
+                        dispachante(buscarClientes(""))
                     }}>Voltar</Button>
                 </div>
             )
@@ -102,6 +103,7 @@ export default function TabelaCliente(props) {
                             }
                         </tbody>
                     </Table>
+                    <p>Quantidade de clientes cadastrados: {listaDeClientes.length}</p>
                 </Container>
             );
         }

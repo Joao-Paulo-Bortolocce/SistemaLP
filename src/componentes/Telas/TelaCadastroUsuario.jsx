@@ -6,9 +6,9 @@ import CadastroUsuario from "./formularios/CadastroUsuario";
 
 export default function TelaCadastroUsuario(){
     const[exibirTabela, setExibirTabela] = useState(true);
-    // const[listaDeUsuarios,setListaDeUsuarios] = useState([]); ISSO AQ VAI TIRAR? É Q TA DANDO ERRO NA HORA Q TO TESTANDO
     const[modoEdicao,setModoEdicao]= useState(false);
     const[usuario,setUsuario]=useState({
+        "id":0,
         "username":"",
         "senha":"",
         "email":"",   
