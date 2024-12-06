@@ -1,7 +1,22 @@
-// const urlBase= "http://localhost:4000/fornecedores";
-const urlBase= "https://bcc-backend-lp2.vercel.app/fornecedores";
+const urlBase= "http://localhost:4000/fornecedores";
+// const urlBase= "https://bcc-backend-lp2.vercel.app/fornecedores";
+
+function substituiBarra(fornecedor) {
+    return { 
+        "cnpj": fornecedor.cnpj.replace(/\//g, "*"),
+        "nome": fornecedor.nome,
+        "email":fornecedor.email ,
+        "estado": fornecedor.estado,
+        "celular": fornecedor.celular,
+        "telefone": fornecedor.telefone,
+        "cep": fornecedor.cep,
+        "numero": fornecedor.numero
+    };
+}
+
 
 export async function gravarFornecedor(fornecedor){
+    fornecedor=substituiBarra(fornecedor)
     const resposta = await fetch(urlBase,{
         "method": "POST",
         "headers":{
@@ -14,6 +29,7 @@ export async function gravarFornecedor(fornecedor){
 }
 
 export async function alterarFornecedor(fornecedor){
+    fornecedor=substituiBarra(fornecedor)
     const resposta = await fetch(urlBase,{
         "method": "PUT",
         "headers":{
@@ -27,9 +43,10 @@ export async function alterarFornecedor(fornecedor){
 }
 
 export async function excluirFornecedor(fornecedor){
+    fornecedor=substituiBarra(fornecedor)
     const resposta = await fetch(urlBase+ "/"+ fornecedor.cnpj,{
         "method": "DELETE",
-    
+        
     })
     const resultado = await  resposta.json();
     return resultado;
@@ -37,6 +54,7 @@ export async function excluirFornecedor(fornecedor){
 }
 
 export async function consultarFornecedor(termo){
+    termo=termo.replace("/","*");
     const resposta = await fetch(urlBase+"/"+termo,{
         "method": "GET",
     })
